@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h> //
+sorting in ascending
+void bubbleSort_ascending(int array[], int size) {
+for (int step = 0; step < size - 1; ++step) {
+for (int i = 0; i < size - step - 1; ++i) {
+if (array[i] > array[i + 1]) { int temp =
+array[i]; array[i] = array[i + 1];
+array[i + 1] = temp;
+}
+}
+}
+}
+//descending sort
+void bubbleSort_descending(int array[], int size) {
+for (int step = 0; step < size - 1; ++step) {
+for (int i = 0; i < size - step - 1; ++i) {
+if (array[i] < array[i + 1]) { int temp =
+array[i]; array[i] = array[i + 1];
+array[i + 1] = temp;
+}
+}
+}
+}
+// taking input
+void print_Array(int array[], int size) {
+for (int i = 0; i < size; ++i) {
+printf("%d ", array[i]);
+}
+printf("\n");
+}
+// to print element by parent process void
+print_parent(int array[], int size)
+{
+for(int i = 0; i <size; i++)
+{
+printf("%d (Process Id = %d with ppId = %d)\n", array[i], getpid(),
+getppid());
+
+sleep(1);
+}
+}
+// to print element by child process void
+print_child(int array[], int size) {
+
+for(int i = 0; i <size; i++)
+{
+printf(" %d (Process Id = %d with ppId = %d)\n",
+
+array[i], getpid(), getppid());
+sleep(2);
+}
+}
+int main()
+{
+int size;
+printf("Enter the number of elements : ");
+scanf("%d", &size);
+int a[size];
+printf("Enter array elements : \n");
+for(int i = 0; i < size; i++)
+{
+printf("a[%d] : ", i+1);
+scanf("%d", &a[i]);
+}
+int p = fork();
+if(p > 0)
+{
+bubbleSort_ascending(a, size);
+
+// printArray(a, size);
+print_parent(a, size);
+//wait(NULL);
+//sleep(300);
+
+printf("parent terminating\n");
+}
+else if (p==0)
+{
+bubbleSort_descending(a, size);
+// printArray(a, size); print_child(a,
+size);
+printf("child terminating\n");
+}
+else
+{
+printf("Child is not created");
+}
+}
